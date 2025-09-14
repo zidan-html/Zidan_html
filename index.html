@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spider-Man Website</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0a0a0a;
+      color: white;
+      text-align: center;
+      overflow-x: hidden;
+      transition: background 0.5s, color 0.5s;
+    }
+    header {
+      background: #b00000;
+      padding: 20px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      transition: background 0.5s;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+      text-shadow: 2px 2px black;
+    }
+    nav {
+      margin-top: 10px;
+    }
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+    nav a:hover {
+      color: yellow;
+    }
+    .hero {
+      position: relative;
+      height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: white;
+      text-shadow: 2px 2px 5px black;
+      z-index: 1;
+    }
+    .hero h2 {
+      font-size: 3em;
+    }
+    .content {
+      padding: 40px;
+      max-width: 800px;
+      margin: auto;
+      position: relative;
+      z-index: 1;
+    }
+    .card {
+      background: rgba(20,20,20,0.9);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+      box-shadow: 0 0 10px rgba(255,0,0,0.6);
+      transition: background 0.5s, box-shadow 0.5s;
+    }
+    footer {
+      background: #111;
+      padding: 20px;
+      margin-top: 40px;
+      position: relative;
+      z-index: 1;
+      transition: background 0.5s;
+    }
+
+    /* Canvas background */
+    #webCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Tombol musik & efek & tema */
+    .controls {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .controls button {
+      background: #b00000;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(255,0,0,0.6);
+      transition: background 0.3s;
+    }
+    .controls button:hover {
+      background: #ff0000;
+    }
+
+    /* Light mode */
+    body.light {
+      background: #f4f4f4;
+      color: #111;
+    }
+    body.light header {
+      background: #ff4444;
+    }
+    body.light .card {
+      background: rgba(255,255,255,0.9);
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+    body.light footer {
+      background: #ddd;
+    }
+    body.light nav a {
+      color: black;
+    }
+    body.light nav a:hover {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Canvas untuk jaring + partikel -->
+  <canvas id="webCanvas"></canvas>
+
+  <header>
+    <h1>Spider-Man</h1>
+    <nav>
+      <a href="#about">Tentang</a>
+      <a href="#movies">Film</a>
+      <a href="#contact">Kontak</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>"With great power comes great responsibility"</h2>
+    <p>- Uncle Ben</p>
+  </section>
+
+  <section class="content" id="about">
+    <div class="card">
+      <h2>Tentang Spider-Man</h2>
+      <p>Spider-Man adalah salah satu superhero paling terkenal dari Marvel Comics, diciptakan oleh Stan Lee dan Steve Ditko. 
+      Karakter ini pertama kali muncul di komik Amazing Fantasy #15 pada tahun 1962.</p>
+    </div>
+  </section>
+
+  <section class="content" id="movies">
+    <div class="card">
+      <h2>Film Spider-Man</h2>
+      <ul style="text-align:left;">
+        <li>Spider-Man (2002)</li>
+        <li>Spider-Man 2 (2004)</li>
+        <li>Spider-Man 3 (2007)</li>
+        <li>The Amazing Spider-Man (2012)</li>
+        <li>The Amazing Spider-Man 2 (2014)</li>
+        <li>Spider-Man: Homecoming (2017)</li>
+        <li>Spider-Man: Far From Home (2019)</li>
+        <li>Spider-Man: No Way Home (2021)</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="content" id="contact">
+    <div class="card">
+      <h2>Kontak</h2>
+      <p>Email: spiderman@marvel.com</p>
+      <p>Instagram: @spiderman</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Spider-Man Fan Website | Made with ❤️ by Fans</p>
+  </footer>
+
+  <!-- Kontrol musik & efek -->
+  <div class="controls">
+    <button onclick="toggleMusic()">🎵 Musik</button>
+    <button onclick="playWeb()">🕸️ Lempar Jaring</button>
+    <button onclick="toggleTheme()">🌙/☀️ Tema</button>
+  </div>
+
+  <!-- Audio -->
+  <audio id="bgMusic" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="webSound">
+    <source src="https://cdn.pixabay.com/audio/2021/08/09/audio_9b4ad9f36e.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const canvas = document.getElementById("webCanvas");
+    const ctx = canvas.getContext("2d");
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    let time = 0;
+
+    // Partikel debu/cahaya
+    const particles = [];
+    for (let i = 0; i < 80; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 2 + 1,
+        dx: (Math.random() - 0.5) * 0.5,
+        dy: (Math.random() - 0.5) * 0.5,
+        alpha: Math.random() * 0.5 + 0.3
+      });
+    }
+
+    function drawParticles() {
+      for (let p of particles) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${p.alpha})`;
+        ctx.fill();
+
+        p.x += p.dx;
+        p.y += p.dy;
+
+        if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+      }
+    }
+
+    function drawWeb() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = "rgba(255,255,255,0.2)";
+      ctx.lineWidth = 1;
+
+      let centerX = canvas.width / 2 + Math.sin(time / 50) * 10;
+      let centerY = canvas.height / 2 + Math.cos(time / 60) * 10;
+      let radiusStep = 80;
+
+      // Lingkaran jaring
+      for (let r = radiusStep; r < Math.max(canvas.width, canvas.height); r += radiusStep) {
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, r, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      // Garis radial
+      for (let angle = 0; angle < 360; angle += 20) {
+        let rad = (angle * Math.PI) / 180;
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.lineTo(
+          centerX + Math.cos(rad) * Math.max(canvas.width, canvas.height),
+          centerY + Math.sin(rad) * Math.max(canvas.width, canvas.height)
+        );
+        ctx.stroke();
+      }
+
+      // Partikel debu
+      drawParticles();
+
+      time++;
+      requestAnimationFrame(drawWeb);
+    }
+
+    drawWeb();
+
+    // Musik & efek suara
+    const bgMusic = document.getElementById("bgMusic");
+    const webSound = document.getElementById("webSound");
+    let isPlaying = false;
+
+    function toggleMusic() {
+      if (isPlaying) {
+        bgMusic.pause();
+      } else {
+        bgMusic.play();
+      }
+      isPlaying = !isPlaying;
+    }
+
+    function playWeb() {
+      webSound.currentTime = 0;
+      webSound.play();
+    }
+
+    // Toggle tema gelap/terang
+    function toggleTheme() {
+      document.body.classList.toggle("light");
+    }
+  </script>
+
+</body>
+</html>
